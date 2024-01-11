@@ -32,6 +32,14 @@ if (app.get('env') === 'production') {
 }
 
 app.use(session(sessionParms));
+
+const passport = require('passport');
+const passportInit = require('./passport/passportInit');
+
+passportInit();
+app.use(passport.initialize());
+app.use(passport.session());
+
 app.use(require('connect-flash')());
 
 app.use(require('./middleware/storeLocals'));
@@ -77,6 +85,7 @@ const port = process.env.PORT || 3000;
 
 const start = async () => {
   try {
+    await require('./db/connect')(process.env.MONGO_URI);
     app.listen(port, () =>
       console.log(`Server is listening on port ${port}...`)
     );
