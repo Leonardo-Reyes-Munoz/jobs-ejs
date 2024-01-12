@@ -39,8 +39,24 @@ passportInit();
 app.use(passport.initialize());
 app.use(passport.session());
 
+const cookieParser = require('cookie-parser');
+app.use(cookieParser(process.env.SESSION_SECRET));
+
 app.set('view engine', 'ejs');
 app.use(require('body-parser').urlencoded({ extended: true }));
+
+const csrf = require('host-csrf');
+let csrf_development_mode = true;
+if (app.get('env') === 'production') {
+  csrf_development_mode = false;
+  app.set('trust proxy', 1);
+}
+const csrf_options = {
+  protected_operations: ['PATCH'],
+  protected_content_types: ['application/json'],
+  development_mode: csrf_development_mode,
+};
+app.use(csrf(csrf_options));
 
 app.use(require('connect-flash')());
 
@@ -54,6 +70,7 @@ app.use('/sessions', require('./routes/sessionRoutes'));
 // secret word handling
 const secretWordRouter = require('./routes/secretWord');
 const auth = require('./middleware/auth');
+
 app.use('/secretWord', auth, secretWordRouter);
 
 app.use((req, res) => {
