@@ -28,8 +28,6 @@ const editForm = async (req, res) => {
   if (!job) {
     throw new Error(`No job with id ${req.params.id}`);
   }
-  console.log(job.company);
-
   res.status(StatusCodes.OK).render('job', { job });
 };
 

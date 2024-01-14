@@ -32,16 +32,16 @@
   <input type="hidden" name="_csrf" value="<%= _csrf %>" />
   <div>
     <label name="company" ">Company Name:</label>
-    <input name="company" value="<% job.company %>" />
+    <input name="company" value="<%= job.company %>" />
   </div>
   <div>
     <label name="position">Position:</label>
-    <input name="position" />
+    <input name="position" value="<%= job.position %>"/>
   </div>
   <div>
     <!-- This form field should be a drop-down list -->
     <label name="status">Status:</label>
-    <input name="status" />
+    <input name="status" value="<%= job.status %>"/>
   </div>
   <div>
     <button onClick="submit">Add Job</button>
