@@ -17,13 +17,14 @@
             <button type="button" action="/job/update/<%= job.id %>">edit</button>
           </a></td>
         <td><form method="POST" action="/jobs/delete/<%= job.id %>" style="display: inline">
-          <button>delete</button>
           <input type="hidden" name="_csrf" value="<%= _csrf %>" />
+          <button type="submit">delete</button>
         </form></td>
       </tr>
     <% }) %>
   <% } %>
 </table>
+<br />
 <a href="/jobs/new">
     <button type="button">Add New Job</button>
 </a>

@@ -28,7 +28,7 @@
 <% } else { %>
 
   <h1>Edit Job Entry</h1>
-<form method="POST" action="/jobs/update/<% job.id %>">
+<form method="POST" action="/jobs/update/<%= job.id %>">
   <input type="hidden" name="_csrf" value="<%= _csrf %>" />
   <div>
     <label name="company" ">Company Name:</label>
@@ -49,10 +49,7 @@
       <button type="button">Cancel</button>
     </a>
   </div>
-  
 </form>
-
-
 <% } %> 
 
 <%- include("partials/footer.ejs") %>
