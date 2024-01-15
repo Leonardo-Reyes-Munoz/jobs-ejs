@@ -20,6 +20,7 @@ const registerDo = async (req, res, next) => {
     } else {
       return next(e);
     }
+
     return res.render('register');
   }
   const info = [`You have successfully registered. Please sign in.`];

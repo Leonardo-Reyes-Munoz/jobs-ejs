@@ -1,14 +1,13 @@
-const express = require('express');
 require('express-async-errors');
 require('dotenv').config();
 
+const express = require('express');
 const session = require('express-session');
-
 const app = express();
 
+// MONGODBStore
 const MongoDBStore = require('connect-mongodb-session')(session);
 const url = process.env.MONGO_URI;
-
 const store = new MongoDBStore({
   // may throw an error, which won't be caught
   uri: url,
@@ -25,13 +24,31 @@ const sessionParms = {
   store: store,
   cookie: { secure: false, sameSite: 'strict' },
 };
+app.use(session(sessionParms));
+
+// extra security packages
+const helmet = require('helmet');
+const xss = require('xss-clean');
+const rateLimiter = require('express-rate-limit');
+
+// extra security packages
+app.set('trust proxy', 1);
+app.use(
+  rateLimiter({
+    windowMs: 15 * 60 * 1000, //15 minutes
+    max: 100, //limit each IP to 100 request per windowMs
+  })
+);
+app.use(express.json());
+app.use(helmet());
+app.use(xss());
 
 if (app.get('env') === 'production') {
-  app.set('trust proxy', 1); // trust first proxy
+  // app.set('trust proxy', 1); // trust first proxy
   sessionParms.cookie.secure = true; // serve secure cookies
 }
 
-app.use(session(sessionParms));
+// passport verification
 const passport = require('passport');
 const passportInit = require('./passport/passportInit');
 
@@ -56,29 +73,28 @@ const csrf_options = {
   protected_content_types: ['application/json'],
   development_mode: csrf_development_mode,
 };
+
 app.use(csrf(csrf_options));
-
 app.use(require('connect-flash')());
-
 app.use(require('./middleware/storeLocals'));
+
+// index routes
 app.get('/', (req, res) => {
   res.render('index');
 });
-
 app.use('/sessions', require('./routes/sessionRoutes'));
 
-// secret word handling
+// secret word routes
 const secretWordRouter = require('./routes/secretWord');
 const auth = require('./middleware/auth');
-
 app.use('/secretWord', auth, secretWordRouter);
 
+// jobs routes
 app.use('/jobs', auth, require('./routes/jobs'));
 
 app.use((req, res) => {
   res.status(404).send(`That page (${req.url}) was not found.`);
 });
-
 app.use((err, req, res, next) => {
   res.status(500).send(err.message);
   console.log(err);
