@@ -41,7 +41,13 @@ const editJob = async (req, res) => {
   } = req;
 
   if (company === '' || position === '') {
-    throw new Error('Company of position fields cannot be empty');
+    const info = ['You must include a company name and position.'];
+    const job = await Job.findOne({
+      _id: req.params.id,
+      createdBy: req.user.id,
+    });
+
+    return res.render('job', { job, info });
   }
 
   const job = await Job.findOneAndUpdate(
