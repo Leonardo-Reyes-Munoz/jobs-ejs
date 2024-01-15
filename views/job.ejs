@@ -12,9 +12,12 @@
     <input name="position" />
   </div>
   <div>
-    <!-- This form field should be a drop-down list -->
-    <label name="status">Status:</label>
-    <input name="status" />
+    <label for="status">Status:</label>
+    <select name="status" id="status">
+      <option value="interview">interview</option>
+      <option value="declined">declined</option>
+      <option value="pending">pending</option>
+    </select>
   </div>
   <div>
     <button onClick="submit">Add Job</button>
@@ -31,17 +34,20 @@
 <form method="POST" action="/jobs/update/<%= job.id %>">
   <input type="hidden" name="_csrf" value="<%= _csrf %>" />
   <div>
-    <label name="company" ">Company Name:</label>
-    <input name="company" value="<%= job.company %>" />
+    <label for="company" ">Company Name:</label>
+    <input name="company" id="company" value="<%= job.company %>" />
   </div>
   <div>
-    <label name="position">Position:</label>
-    <input name="position" value="<%= job.position %>"/>
+    <label for="position">Position:</label>
+    <input name="position" id="position" value="<%= job.position %>"/>
   </div>
   <div>
-    <!-- This form field should be a drop-down list -->
-    <label name="status">Status:</label>
-    <input name="status" value="<%= job.status %>"/>
+    <label for="status">Status:</label>
+    <select name="status" id="status">
+      <option value="interview">interview</option>
+      <option value="declined">declined</option>
+      <option value="pending" selected>pending</option>
+    </select>
   </div>
   <div>
     <button onClick="submit">Edit Job</button>
