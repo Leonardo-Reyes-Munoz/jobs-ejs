@@ -8,10 +8,10 @@ const registerShow = (req, res) => {
 const registerDo = async (req, res, next) => {
   if (req.body.password != req.body.password1) {
     req.flash('error', 'The passwords entered do not match. Please try again.');
-    return res.render('register');
   }
   try {
     await User.create(req.body);
+    req.flash('info', 'Profile successfully created. Please sign-in.');
   } catch (e) {
     if (e.constructor.name === 'ValidationError') {
       parseVErr(e, req);
@@ -20,11 +20,9 @@ const registerDo = async (req, res, next) => {
     } else {
       return next(e);
     }
-
-    return res.render('register');
+    return res.redirect('/sessions/register');
   }
-  const info = [`You have successfully registered. Please sign in.`];
-  res.render('logon', { info });
+  res.redirect('/');
 };
 
 const logoff = (req, res) => {
