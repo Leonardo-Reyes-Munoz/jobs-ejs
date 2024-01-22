@@ -96,8 +96,8 @@ app.use((req, res) => {
   res.status(404).send(`That page (${req.url}) was not found.`);
 });
 app.use((err, req, res, next) => {
-  res.status(500).send(err.message);
   console.log(err);
+  res.status(500).send(err.message);
 });
 
 const port = process.env.PORT || 3000;
